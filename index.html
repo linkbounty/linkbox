@@ -269,6 +269,13 @@
             modalListElement = document.getElementById('modal-links-list');
             modalContentElement = document.getElementById('modal-content');
 
+            // Add Event Listener safely (Ensures modal exists)
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModal();
+                });
+            }
+
             if (!gridContainer) console.error("Grid Container not found!");
         }
 
@@ -467,9 +474,7 @@
             }, 300);
         }
 
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
-        });
+
 
         // Initialize
         const searchInput = document.getElementById('searchInput');
