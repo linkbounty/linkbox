@@ -134,19 +134,7 @@
     <!-- Main Content Section -->
     <main class="container mx-auto px-6 py-8">
 
-        <!-- New Animation Section -->
-        <div id="animation-container"
-            class="animation-container w-full h-48 mb-12 rounded-xl flex items-center justify-center">
-            <div class="animation-text text-center">
-                <h2 class="text-4xl font-bold text-white">Your Digital Universe</h2>
-                <p class="text-white/80 text-lg mt-1">Explore the world of links.</p>
-            </div>
-        </div>
 
-        <!-- Ad Space Section -->
-        <div class="ad-space w-full max-w-4xl mx-auto h-24 mb-10 rounded-lg flex items-center justify-center">
-            <span class="text-white/70 text-lg font-semibold">Advertisement Space</span>
-        </div>
 
         <!-- 
           Grid container for all categories 
@@ -192,6 +180,7 @@
     <!-- JAVASCRIPT SECTION -->
     <!-- ====================================================== -->
     <script src="data.js"></script>
+    <script src="custom_links.js"></script>
     <script>
         // --- 1. SMART ICON GENERATOR (COLORFUL APP STYLE) ---
         // Yeh function ab icon class ke saath-saath background color bhi return karega
@@ -353,7 +342,6 @@
 
                 // Realistic 3D Icon Container
                 const iconDiv = document.createElement('div');
-                // Added ring for 3D depth, inner shadow emulation
                 iconDiv.className = `w-20 h-20 rounded-2xl mb-5 flex items-center justify-center bg-gradient-to-br ${gradientClass} shadow-xl ring-1 group-hover:scale-110 transition-all duration-300 z-10 group-hover:-translate-y-2 group-hover:rotate-3 relative`;
 
                 // Inner highlight for glossy look
@@ -361,27 +349,35 @@
                 innerShine.className = 'absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/20 to-transparent rounded-t-2xl pointer-events-none';
                 iconDiv.appendChild(innerShine);
 
-                const i = document.createElement('i');
-                // Icon is now WHITE text with shadow
-                i.className = `${category.icon} text-4xl text-white drop-shadow-lg`;
-                iconDiv.appendChild(i);
+                // Realistic 3D Icon Rendering
+                const isFontAwesome = category.icon.includes('fa-');
+                let iconHtml;
+                if (isFontAwesome) {
+                    iconHtml = `<i class="${category.icon} text-4xl text-white drop-shadow-lg group-hover:scale-125 transition-transform duration-300"></i>`;
+                } else {
+                    // Emoji / Text Icon (Huge 3D Effect)
+                    iconHtml = `<span class="text-6xl drop-shadow-[0_5px_5px_rgba(0,0,0,0.5)] group-hover:scale-125 transition-transform duration-300 filter">${category.icon}</span>`;
+                }
+
+                // Wrapper for icon
+                const iconWrapper = document.createElement('div');
+                iconWrapper.className = 'z-10 flex items-center justify-center w-full h-full';
+                iconWrapper.innerHTML = iconHtml;
+                iconDiv.appendChild(iconWrapper);
 
                 const title = document.createElement('h3');
-                // Transition title up
-                title.className = 'text-lg font-bold text-white group-hover:text-blue-200 transition-all duration-300 z-10 group-hover:-translate-y-1 tracking-wide';
+                title.className = 'text-lg font-bold text-white group-hover:text-blue-200 transition-all duration-300 z-10 group-hover:-translate-y-1 tracking-wide mt-3';
                 title.textContent = category.title;
 
                 const count = document.createElement('span');
-                // Fade out count on hover
-                count.className = 'text-xs font-medium text-gray-400 mt-2 z-10 transition-opacity duration-300 group-hover:opacity-0 bg-gray-800/50 px-3 py-1 rounded-full border border-white/5';
-                // Calculate total links (simple version)
+                count.className = 'text-xs font-medium text-gray-400 mt-1 z-10 transition-opacity duration-300 group-hover:opacity-0 bg-gray-800/50 px-3 py-1 rounded-full border border-white/5';
+
                 let totalLinks = (category.links ? category.links.length : 0);
                 if (category.subcategories) {
                     category.subcategories.forEach(sub => totalLinks += (sub.links ? sub.links.length : 0));
                 }
                 count.textContent = `${totalLinks} Links`;
 
-                // Description Element (Fix: Ensure higher Z-index and visibility)
                 const desc = document.createElement('p');
                 desc.className = 'absolute bottom-0 left-0 right-0 p-4 text-sm font-medium text-white bg-black/80 backdrop-blur-md transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 text-center border-t border-white/10 z-20';
                 desc.textContent = category.description || "Explore this category";
@@ -394,6 +390,7 @@
                 gridContainer.appendChild(card);
             });
         }
+
 
         // Open Modal
         function openModal(category) {
